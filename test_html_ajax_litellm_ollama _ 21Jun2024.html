@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .button {
+          background-color: #04AA6D;
+          border: 2px solid #f44336;
+          border-radius: 10px;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+      }
+  </style>
+  <title>AJAX POST Request Example</title>
+  <script>
+    function sendMessage() {
+        var xhr = new XMLHttpRequest();
+
+        // using Ollama Qwen2 ~> https://ollama.com/library/qwen2
+        // using LiteLLM ~> https://docs.litellm.ai/docs/proxy/quick_start#run-proxy-with-config
+        var url = 'http://0.0.0.0:4000/chat/completions'; 
+
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // Example: Add authentication token header
+        // xhr.setRequestHeader('Authorization', 'Bearer your_access_token_here');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = xhr.responseText;
+                    // Assuming the response is JSON, you can parse it
+                    var data = JSON.parse(response);
+                    // Handle the data or do something with it
+                    console.log(data);
+                    alert(data.choices[0].message.content) //~> Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?
+                } else {
+                    console.error('Request failed. Status:', xhr.status);
+                }
+            }
+        };
+
+        var messageData = {
+            "model": "ollama/qwen2",
+            "messages": [
+            {
+                "role": "user",
+                "content": "chào bạn"
+            }
+            ],
+            "stream": false
+        };
+
+        xhr.send(JSON.stringify(messageData));
+    }
+</script>
+</head>
+<body>
+    <button class="button" onclick="sendMessage()">Send Message to Ollama</button>
+</body>
+</html>
+
+
